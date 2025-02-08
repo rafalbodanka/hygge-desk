@@ -7,6 +7,7 @@ export const manifest:ResolverManifest = {
             assets:
             {
                 "empty" : "./world/empty.png",
+                "background" : "./world/background.jpg",
                 "ground_tile" : "./world/ground_tile.png",
                 "tree_big" : "./world/tree_big.png",
                 "tree_big-json" : "./world/tree_big.json",
