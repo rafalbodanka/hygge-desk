@@ -65,7 +65,7 @@ export class Modal {
             fontSize: 26,
             fill: 0xFFFFFF,
             wordWrap: true,
-            wordWrapWidth: 640,
+            wordWrapWidth: 620,
             fontWeight: 'bold'
         });
         
@@ -85,7 +85,7 @@ export class Modal {
             fontSize: 26,
             fill: 0xFFFFFF,
             wordWrap: true,
-            wordWrapWidth: 640,
+            wordWrapWidth: 620,
             fontWeight: 'bold'
         });
     
