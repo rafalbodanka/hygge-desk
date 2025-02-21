@@ -346,8 +346,10 @@ export class Scene extends Container {
     }
 
     public finishIntro() {
+        if (!this.introFinished) {
+            this.tree.displayHint();
+        }
         this.introFinished = true;
-        this.tree.displayHint();
     }
     
 }
