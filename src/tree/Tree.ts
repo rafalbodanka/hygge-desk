@@ -2,10 +2,15 @@ import { AnimatedSprite, Assets, Texture } from 'pixi.js';
 import { Log } from './Log'; // Assuming Log is another class in your project.
 import { CollisionBounds } from '../types/CollisionBounds';
 import { Scene } from '../scenes/Scene'; // Import the Scene class
+import { HintMessage } from '../hint/hintMessage';
+import { messages } from '../plot/Plot';
 
 export class Tree extends AnimatedSprite {
-    private health: number = 4;
+    public health: number = 4;
     private scene: Scene; // Store a reference to the scene
+    public hintMessage: HintMessage | null = null;
+    public treeCounter = 0;
+    public hintClosed: Boolean = false;
 
     constructor(scene: Scene) {
         // Pass the scene reference to the Tree
@@ -35,7 +40,16 @@ export class Tree extends AnimatedSprite {
 
         // If health reaches 0, spawn logs
         if (this.health === 0) {
+            this.hintClosed = true;
             this.createLogs();
+            if (this.treeCounter === 0) {
+                setTimeout(() => {
+                    this.scene.hero.displayThoughts();
+                }, 1000);
+            }
+            if (this.scene.tree.hintMessage) {
+                this.scene.tree.hintMessage.closeModal()
+                }
         }
 
         return this.health;
@@ -56,6 +70,19 @@ export class Tree extends AnimatedSprite {
 
             // Push the log to the scene's logs array to track it
             this.scene.logs.push(log); // This ensures the scene keeps track of the logs for updates
+        }
+    }
+
+    public revive() {
+        this.health = 4;
+        this.gotoAndStop(0); // Show the first frame (full health)
+        this.treeCounter += 1;
+    }
+
+    public displayHint() {
+        if (!this.hintClosed) {
+            this.hintMessage = new HintMessage(this, messages['worldInfo']['cutTheTree'][this.scene.language], 1, () => {this.scene.hero.canAttack = true;});
+            this.hintMessage.displayOnScene(this);
         }
     }
 }

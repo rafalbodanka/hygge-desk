@@ -1,99 +1,160 @@
-import { AnimatedSprite, Assets, Container, Graphics, Sprite, Texture, Ticker } from "pixi.js";
+import { Assets, Container, Graphics, Sprite, Texture, Ticker } from "pixi.js";
 import * as PIXI from 'pixi.js';
 import { Hero } from "../hero/Hero";
-import { Weapon } from "../weapons/Weapon";
-import { AXE } from "../weapons/WeaponTypes";
+// import { Weapon } from "../weapons/Weapon";
 import Keyboard from "../Keyboard";
 import { Tree } from "../tree/Tree";
-import { Entity } from "../types/Entity";
 import { Log } from "../tree/Log";
+import { Lumberjack } from "../lumberjack/Lumberjack";
+import { Home } from "../home/Home";
+import { Modal } from "../modal/Modal";
+import { messages } from "../plot/Plot"
+import { Desk } from "../desk/Desk";
+import { Chair } from "../desk/Chair";
+import { HintMessage } from "../hint/hintMessage";
+
 
 export class Scene extends Container {
-
-    private worldMatrix: number[][];
+    private sceneHeight: number;
+    private sceneWidth: number;
+    public worldWidth: number;
+    private cameraOffsetX: number = 0;
     private world: Sprite;
-    private hero: Hero;
-    private hero2: AnimatedSprite;
-    private weapon: Weapon;
-    private tree: Tree;
+    public hero: Hero;
+    public lumberjack: Lumberjack;
+    // private weapon: Weapon;
+    public tree: Tree;
     private maskGraphics: Graphics;
     private leftAnimationFrames: Texture[] = [];
     private groundTiles: Sprite[] = []; // Array to store ground tile sprites
-    private sceneHeight: number;
-    private sceneWidth: number;
     public logs: Log[] = []; // Array to store logs in the scene
     public logsCounter: Sprite;
     private logCountText: PIXI.DisplayObject;
     public logCount: number = 0;
     private logCounterContainer: Container;
+    public home: Home;
+    public deskReady: Boolean = false;
+    public modal: Modal;
+    public desk: Desk;
+    public introFinished: Boolean = false;
+    public canSleep: Boolean = false;
+    public chair: Chair;
+    public gameFinished: Boolean = false;
+    public language: "en" | "pl" = "en";
+    public keyboardIcon: Sprite;
+    public changeLanguageButton: Container = new Container();
 
     constructor() {
         super();
 
         this.sceneWidth = 640;
         this.sceneHeight = 360;
+        this.worldWidth = 2400;
+        this.sortableChildren = true;
+        window.addEventListener("keydown", this.onKeyPress.bind(this));
 
-        const matrix: number[][] = [];
-        // Initialize the matrix
-        for (let i = 0; i < this.sceneHeight; i++) {
-            matrix[i] = [];
-            for (let j = 0; j < this.sceneWidth; j++) {
-                matrix[i][j] = 0; // 0 represents an empty cell
-            }
-        }
-        this.worldMatrix = matrix;
-
-
-        this.weapon = new Weapon(AXE)
-        this.weapon.x = 200
-        this.weapon.y = 200
-        // this.world = Sprite.from("ship");
+        // this.weapon = new Weapon(AXE)
+        // this.weapon.x = 200
+        // this.weapon.y = 200
         this.world = Sprite.from("background");
+        this.world.x = 0;
+        this.world.y = 0;
+        this.addChild(this.world);
+        // Create a Graphics object for the mask
+        this.maskGraphics = new Graphics();
+        this.addChild(this.maskGraphics);
+        
+        const groundTileTexture = Texture.from("ground_tile");
+        
+        // Create and position the ground tiles at the bottom of the scene
+        this.createGroundPlatform(groundTileTexture);
+
+        this.desk = new Desk(this);
+        this.desk.x = 200
+        this.desk.y = this.sceneHeight - this.desk.height - this.groundTiles[0].height + 15
+
+        this.chair = new Chair();
+        this.chair.x = 200
+        this.chair.y = this.sceneHeight - this.desk.height - this.groundTiles[0].height + 15
+
+        this.home = new Home(this)
+        this.home.x = 0
+        console.log(this.groundTiles[0])
+        this.home.y = this.sceneHeight - this.home.height - this.groundTiles[0].height + 8
+        this.addChild(this.home)
 
         this.tree = new Tree(this)
         this.tree.x = 300
         this.tree.y = this.sceneHeight - 32 - this.tree.height
-        this.world.x = 0;
-        this.world.y = 0;
         const animations = Assets.cache.get('hero-idle-json').data.frames;
         const frameNames = Object.keys(animations);
         this.leftAnimationFrames = frameNames.filter(frameName => frameName.includes("right")).map(frameName => Texture.from(frameName));
-        this.hero = new Hero(this.leftAnimationFrames, this, this.weapon, this.tree);
+        this.hero = new Hero(this.leftAnimationFrames, this, this.tree, this.home);
         this.hero.x = this.sceneWidth / 2;
         this.hero.y = this.sceneHeight - this.hero.height - 32
-        this.hero.zIndex = 3
+        this.hero.zIndex = 4
         this.tree.zIndex = 1
-        this.weapon.zIndex = 2
-        this.addChild(this.world);
+        // this.weapon.zIndex = 2
         this.addChild(this.tree)
-        this.addChild(this.weapon)
+        // this.addChild(this.weapon)
         this.addChild(this.hero)
-        this.hero2 = new AnimatedSprite(this.leftAnimationFrames)
-        this.hero2.animationSpeed = 0.05
-        this.hero2.play()
-        console.log(this.hero2.currentFrame)
-        this.addChild(this.hero2)
-        this.markArea(this.tree)
-        this.markArea(this.weapon)
-        this.markArea(this.hero)
+        const animationsLumberjack = Assets.cache.get('lumberjack-idle-json').data.frames;
+        const lumberjackFrameNames = Object.keys(animationsLumberjack);
+        this.leftAnimationFrames = lumberjackFrameNames.filter(frameName => frameName.includes("left")).map(frameName => Texture.from(frameName));
+        this.lumberjack = new Lumberjack(this.leftAnimationFrames, this)
+        this.lumberjack.animationSpeed = 0.05
+        this.lumberjack.y = this.hero.y
+        this.lumberjack.x = this.sceneWidth - this.lumberjack.width - 50;
+        this.lumberjack.zIndex = 3
+        this.lumberjack.play()
+        this.addChild(this.lumberjack)
 
-        // Create a Graphics object for the mask
-        this.maskGraphics = new Graphics();
-        this.addChild(this.maskGraphics);
-
-        const groundTileTexture = Texture.from("ground_tile");
-
-        // Create and position the ground tiles at the bottom of the scene
-        this.createGroundPlatform(groundTileTexture);
         this.logsCounter = new Sprite();
         this.logCountText = new PIXI.Text("") as unknown as PIXI.DisplayObject;
         this.logCounterContainer = new Container();
 
         this.createLogCounter();
 
+        this.finishIntro = this.finishIntro.bind(this);
+        this.keyboardIcon = new Sprite(Assets.get('keyboardIcon'))
+        this.keyboardIcon.scale.set(1/10, 1/10)
+        this.keyboardIcon.position.x = 40
+        this.addChild(this.keyboardIcon)
+
+        this.keyboardIcon.interactive = true;
+        this.keyboardIcon.on('pointerdown', () => {
+            this.modal.visible = true;
+            this.addChild(this.modal.container)
+        })
+
+        this.keyboardIcon.on('pointerover', () => {
+            this.keyboardIcon.scale.set(1/9.5, 1/9.5)
+        })
+
+        this.keyboardIcon.on('pointerout', () => {
+            this.keyboardIcon.scale.set(1/10, 1/10)
+        })
+
+        const hintsModal: Modal = new Modal(this, null, null, false, this.finishIntro)
+
+        const introModal = new Modal(this, null, hintsModal, false, ()=> {})
+
+        this.modal = new Modal(this, "Język / Language", introModal, true, ()=> {
+            console.log(this.language)
+            hintsModal.createText(messages['plot']['hints'][this.language])
+            introModal.createText(messages['plot']['intro'][this.language])
+        }, undefined, true)
+
         Keyboard.initialize()
+        // this.spawnDesk()
+        // this.deskReady = true
 
         Ticker.shared.add(this.update, this);
+    }
+    onKeyPress(event: KeyboardEvent) {
+        if (this.modal.visible && event.code === "Enter" && !this.modal.languageModal) {
+            this.modal.closeModal(this);
+        }
     }
 
     private createGroundPlatform(groundTileTexture: Texture) {
@@ -134,59 +195,6 @@ export class Scene extends Container {
         }
     }
 
-    private markArea(entity: Entity) {
-        const bounds = entity.getCollisionBounds();
-        const left = Math.max(0, Math.floor(bounds.left));
-        const right = Math.min(this.worldMatrix.length, Math.ceil(bounds.right));
-        const top = Math.max(0, Math.floor(bounds.top));
-        const bottom = Math.min(this.worldMatrix[0].length, Math.ceil(bounds.bottom));
-
-        for (let i = left; i < right; i++) {
-            for (let j = top; j < bottom; j++) {
-                this.worldMatrix[i][j] = 1;
-            }
-        }
-    }
-
-    public isPositionTaken(left: number, right: number, top: number, bottom: number): boolean {
-        // Convert coordinates to matrix indices
-        const matrixLeft = Math.floor(left);
-        const matrixRight = Math.ceil(right);
-        const matrixTop = Math.floor(top);
-        const matrixBottom = Math.ceil(bottom);
-    
-        // Define a buffer around the hero's position to focus on
-        const buffer = 5; // You can adjust this value based on your needs
-    
-        // Adjust the region of interest based on the buffer
-        const startI = Math.max(0, matrixLeft - buffer);
-        const endI = Math.min(this.worldMatrix.length, matrixRight + buffer);
-        const startJ = Math.max(0, matrixTop - buffer);
-        const endJ = Math.min(this.worldMatrix[0].length, matrixBottom + buffer);
-    
-        // Check each pixel in the adjusted region
-        for (let i = startI; i < endI; i++) {
-            for (let j = startJ; j < endJ; j++) {
-                
-                // Check if the position is within the matrix bounds
-                if (i >= 0 && i < this.worldMatrix.length &&
-                    j >= 0 && j < this.worldMatrix[0].length) {
-                    // Exclude the hero's current position from the check
-                    if (this.worldMatrix[i][j] > 0) {
-                        console.log(this.worldMatrix[i][j])
-                        return true; // Collision detected
-                    }
-                } else {
-                    // If the position is outside the matrix bounds, consider it as taken
-                    return true; // Collision detected
-                }
-            }
-        }
-    
-        // No collision detected
-        return false;
-    }
-
     private createLogCounter() {
         // Load log texture
         const logTexture = Assets.cache.get('log');
@@ -198,20 +206,15 @@ export class Scene extends Container {
         this.logsCounter = new Sprite(logTexture);
         this.logsCounter.scale.set(2); // Scale by 2
         
-        // Create text style
-        // const textStyle = new PIXI.TextStyle({
-        //     fontSize: 24,
-        //     fill: "#ffffff",
-        //     fontWeight: "bold",
-        // });
-        
         // Create text element for log count
-        this.logCountText = new PIXI.Text(`x ${this.logCount}`, {
-            fontSize: 24,
+        this.logCountText = new PIXI.Text(`${this.lumberjack.logsTaken}/${this.lumberjack.logsTarget}`, {
+            fontFamily: "VT323",
+            fontSize: 32,
             fill: "#ffffff", // White text
             fontWeight: "bold",
             stroke: "#000000", // Black outline
             strokeThickness: 4, // Outline thickness
+            letterSpacing: -3,
         });
         
         
@@ -230,29 +233,121 @@ export class Scene extends Container {
         this.hero.update(deltaTime);
         // Clear the mask graphics
         this.maskGraphics.clear();
-        for (let i = 0; i < this.sceneHeight; i++) {
-            this.worldMatrix[i] = [];
-            for (let j = 0; j < this.sceneWidth; j++) {
-                this.worldMatrix[i][j] = 0; // 0 represents an empty cell
-            }
-        }
-        this.markArea(this.tree)
-        this.markArea(this.weapon)
-        this.markArea(this.hero)
+
         this.logs.forEach(log => {
             log.update(deltaTime); // This calls the update method of each log
         });
-        // Draw a purple rectangle for each "1" in the worldMatrix
-        for (let i = 0; i < this.sceneHeight; i++) {
-            for (let j = 0; j < this.sceneWidth; j++) {
-                if (this.worldMatrix[i][j] === 1) {
-                    this.maskGraphics.beginFill(0xFF00FF, 0.2); // Purple color with 20% opacity
-                    this.maskGraphics.drawRect(i, j, 1, 1);
-                    this.maskGraphics.endFill();
+
+        this.updateCamera(deltaTime);
+
+        (this.logCountText as PIXI.Text).text = `${this.lumberjack.logsTaken + this.logCount}/${this.lumberjack.logsTarget}`;
+
+        // if (this.modal.visible && Keyboard.state.get("Enter")) {
+        //     this.modal.closeModal(this);
+        // }
+    }
+
+
+    private updateCamera(deltaTime: number) {
+        // const leftBound = 0;
+        // const rightBound = this.world.width;
+        let shouldMove = false;
+        let shiftAmount = 0;
+
+        const cameraMoveMargin = 150;
+
+        // console.log("camera offset", this.cameraOffsetX)
+
+        // console.log("hero x", this.hero.x)
+        // console.log("world x",this.world.x)
+
+        if (this.hero.x < this.cameraOffsetX + cameraMoveMargin && this.hero.isMoving && this.hero.currentDirection === "left") {
+            shiftAmount = this.hero.currentSpeed * deltaTime;
+            this.cameraOffsetX += shiftAmount
+            shouldMove = true
+        } else if (this.hero.x > this.cameraOffsetX + this.world.width - this.hero.width - cameraMoveMargin && this.hero.isMoving && this.hero.currentDirection === "right") {
+            shiftAmount = -this.hero.currentSpeed * deltaTime;
+            this.cameraOffsetX += shiftAmount;
+            shouldMove = true
+
+        }
+
+        if (!shouldMove) {
+            return
+        }
+
+        // this.tree.x += shiftAmount;
+        // this.weapon.x += shiftAmount;
+        // this.logs.forEach(log => log.x += shiftAmount);
+        // this.groundTiles.forEach(tile => tile.x += shiftAmount);
+    }
+
+    public startNewDay() {
+        const fadeOverlay = new Graphics();
+        fadeOverlay.beginFill(0x000000);
+        fadeOverlay.drawRect(0, 0, this.width, this.height);
+        fadeOverlay.endFill();
+        fadeOverlay.alpha = 0; // Start transparent
+        fadeOverlay.zIndex = 10;
+        this.addChild(fadeOverlay);
+    
+        let fadeTime = 0; // Track fade duration
+        let state = "fade-in"; // Track current phase (fade-in, update, fade-out)
+    
+        // Add fade effect to the shared ticker
+        const fadeEffect = (delta: number) => {
+            fadeTime += delta / 60; // Convert frames to seconds (approximate)
+    
+            if (state === "fade-in") {
+                fadeOverlay.alpha += 0.05 * delta;
+                if (fadeOverlay.alpha >= 1) {
+                    fadeOverlay.alpha = 1;
+                    state = "update"; // Move to next phase
+                    fadeTime = 0;
+                }
+            } 
+            else if (state === "update") {
+                if (fadeTime >= 0.1) { // Wait 1 second
+                    this.tree.revive();
+                    this.lumberjack.canPickUpToday = true;
+                    if (this.lumberjack.logsTaken >= this.lumberjack.logsTarget) {
+                        this.deskReady = true;
+                    }
+                    state = "fade-out";
+                    fadeTime = 0;
+                    if (this.deskReady && !this.children.some(child => child instanceof Desk)) {
+                        this.desk.zIndex = 1;
+                        this.spawnDesk()
+                    }
+                    this.sortChildren(); 
+                    this.lumberjack.removeChild(this.lumberjack.messageContainer)
+                }
+            } 
+            else if (state === "fade-out") {
+                fadeOverlay.alpha -= 0.05 * delta;
+                if (fadeOverlay.alpha <= 0) {
+                    fadeOverlay.alpha = 0;
+                    this.removeChild(fadeOverlay); // Cleanup
+                    Ticker.shared.remove(fadeEffect); // Stop updating
+                    
                 }
             }
-        }
-        console.log(this.logCount);
-        (this.logCountText as PIXI.Text).text = `x ${this.logCount}`;
+        };
+
+        Ticker.shared.add(fadeEffect);
     }
+
+    public spawnDesk() {
+        this.desk.zIndex = 5;
+        this.addChild(this.desk);
+        this.addChild(this.chair);
+        this.home.hintMessage?.closeModal()
+        this.desk.hintMessage = new HintMessage(this.desk, messages['worldInfo']['deskSitDown'][this.language], 0, null, -320)
+    }
+
+    public finishIntro() {
+        this.introFinished = true;
+        this.tree.displayHint();
+    }
+    
 }

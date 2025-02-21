@@ -1,48 +1,57 @@
-import { AnimatedSprite, Resource, Sprite, Texture, Assets } from "pixi.js";
-// import { sound } from "@pixi/sound";
-// import Keyboard from "../Keyboard";
-import { Weapon } from "../weapons/Weapon";
+import { AnimatedSprite, Resource, Texture, Assets, Container, Sprite, Text } from "pixi.js";
 import { Tree } from "../tree/Tree";
 import { CollisionBounds } from "../types/CollisionBounds";
 import { Scene } from "../scenes/Scene";
 import Keyboard from "../Keyboard";
+import { Home } from "../home/Home";
+import { HintMessage } from "../hint/hintMessage";
+import { messages } from "../plot/Plot";
 
 
 export class Hero extends AnimatedSprite {
-    private shadow: Sprite;
-    private velocity: number = 1;
-    private attackCooldown: number = 0.01;
-    private currentDirection: string = 'right';
+    // private shadow: Sprite;
+    public velocity: number = 1;
+    // private attackCooldown: number = 0.01;
+    public currentDirection: string = 'right';
     private attackLasts: boolean = false;
-    private leftAnimationIdleFrames: Texture[] = [];
-    private rightAnimationIdleFrames: Texture[] = [];
-    private leftAnimationMoveFrames: Texture[] = [];
-    private rightAnimationMoveFrames: Texture[] = [];
-    private directionChanged: boolean = false;
-    private isMoving: boolean = false;
+    public leftAnimationIdleFrames: Texture[] = [];
+    public rightAnimationIdleFrames: Texture[] = [];
+    public leftAnimationMoveFrames: Texture[] = [];
+    public rightAnimationMoveFrames: Texture[] = [];
+    // private directionChanged: boolean = false;
+    public isMoving: boolean = false;
     private timeSinceLastAttack: number = 0;
     // private canPickUp: boolean = true;
     // private isWeaponEquipped: boolean = false;
     // private weapon: Weapon;
     private scene: Scene;
     private tree: Tree;
-    private currentSpeed: number = 0; // Initial speed
+    public home: Home;
+    public currentSpeed: number = 0; // Initial speed
     private acceleration: number = 0.02; // Acceleration rate
     private deceleration: number = 0.02; // Deceleration rate
+    public canPlay: Boolean = false;
+    public canAttack: Boolean = false;
+    private messageText: Text | null = null;
+    private messageTimeout: any = null;
+    public messageContainer: Container;
 
-    constructor(textures: Texture<Resource>[], scene: Scene, weapon: Weapon, tree: Tree) {
-        // constructor(textures: Texture<Resource>[], scene: Scene, weapon: Weapon, tree: Tree) {
 
+    constructor(textures: Texture<Resource>[], scene: Scene, tree: Tree, home: Home) {
         super(textures);
-        console.log(weapon)
         this.setupAnimations();
         this.loop = true
         this.scene = scene;
+        this.home = home;
         // this.weapon = weapon;
-        this.shadow = Sprite.from("shadow")
+        // this.shadow = Sprite.from("shadow")
         this.tree = tree;
-        this.shadow.y = 8;
-        this.addChild(this.shadow)
+        // this.shadow.y = 8;
+        // this.addChild(this.shadow)
+        window.addEventListener('keydown', this.onKeyDown.bind(this));
+        window.addEventListener('keyup', this.onKeyUp.bind(this));
+
+        this.messageContainer = new Container();
     }
 
     private setupAnimations(): void {
@@ -69,138 +78,104 @@ export class Hero extends AnimatedSprite {
         this.play();
     }
 
-    private updateAnimations(deltaTime: number): void {
+    
+    private onKeyDown(event: KeyboardEvent): void {
+        switch (event.code) {
+            case "KeyD":
+                this.startMovingRight();
+                break;
+            case "KeyA":
+                this.startMovingLeft();
+                break;
+            case "KeyJ":
+                this.hit();
+        }
+    }
 
-        // console.log(this.texture)
-        // return
+    private onKeyUp(event: KeyboardEvent): void {
+        switch (event.code) {
+            case "KeyD":
+                if (this.isMoving && this.currentDirection === 'right') {
+                    this.stopMoving();
+                }
+                break;
+            case "KeyA":
+                if (this.isMoving && this.currentDirection === 'left') {
+                    this.stopMoving();
+                }
+                break;
+        }
+    }
 
-        // if (Keyboard.state.get("KeyA") && !this.isMoving) {
-        //     // launcing animation
-        //     this.textures = this.leftAnimationMoveFrames
-        //     this.animationSpeed = 0.1
-        //     this.play()
-
-        //     //moving hero on the map
-        //     this.x -= Math.ceil(this.velocity * deltaTime);
-        //     this.currentDirection = 'left'
-
-        //     this.isMoving = true;
-        // } else if (Keyboard.state.get("KeyD") && !this.isMoving) {
-        //     // launcing animation
-        //     this.textures = this.rightAnimationMoveFrames
-        //     this.animationSpeed = 0.1
-        //     this.play()
-
-        //     //moving hero on the map
-        //     this.x += Math.ceil(this.velocity * deltaTime);
-        //     this.currentDirection = 'right'
-
-        //     this.isMoving = true;
-        // } else if (this.isMoving && !Keyboard.state.get("KeyA") && !Keyboard.state.get("KeyD")) {
-        //     this.textures = this.currentDirection === 'right' ? this.rightAnimationIdleFrames : this.leftAnimationIdleFrames
-        //     this.animationSpeed = 0.02;
-        //     this.play()
-        //     this.isMoving = false
-        // }
-
-
-
-
-        // console.log(this.textures, this.currentFrame, this.playing)
-        // console.log(this.weapon, this.tree, this.scene, deltaTime)
-
-
-
-
-        const isMovingNow =
-            Keyboard.state.get("KeyW") ||
-            Keyboard.state.get("KeyS") ||
-            Keyboard.state.get("KeyA") ||
-            Keyboard.state.get("KeyD");
-
-        if (isMovingNow && !this.isMoving) {
+    private startMovingRight(): void {
+        if (this.canPlay && (!this.isMoving || this.currentDirection === 'left')) {
+            this.stopMoving(); // Stop any current movement before changing direction
             this.isMoving = true;
-            this.animationSpeed = 0.15; // Set speed only when starting movement
-        }
-
-        if (this.isMoving && !isMovingNow) {
-            this.animationSpeed = 0.02;
-            this.textures = this.currentDirection === 'right' ? this.rightAnimationIdleFrames : this.leftAnimationIdleFrames;
+            this.currentDirection = 'right';
+            this.textures = this.rightAnimationMoveFrames;
+            this.animationSpeed = 0.15;
             this.play();
-            this.isMoving = false;
+        }
+    }
+
+    private startMovingLeft(): void {
+        if (this.canPlay && (!this.isMoving || this.currentDirection === 'right')) {
+            this.stopMoving(); // Stop any current movement before changing direction
+            this.isMoving = true;
+            this.currentDirection = 'left';
+            this.textures = this.leftAnimationMoveFrames;
+            this.animationSpeed = 0.15;
+            this.play();
+        }
+    }
+
+    private stopMoving(): void {
+        this.isMoving = false;
+        if (this.scene.gameFinished) {
+            return
+        }
+        this.textures = this.currentDirection === 'right' ? this.rightAnimationIdleFrames : this.leftAnimationIdleFrames;
+        this.animationSpeed = 0.02;
+        this.play();
+    }
+
+    private updateAnimations(deltaTime: number): void {
+        if (!this.canPlay || this.scene.gameFinished) {
+            return;
         }
 
-        // Handle acceleration
+        const isMovingNow = this.isMoving; // Use the isMoving flag instead
+
         if (isMovingNow) {
+            // Handle movement logic
+            if (this.currentDirection === 'right') {
+                this.x += Math.ceil(this.currentSpeed * deltaTime);
+            } else if (this.currentDirection === 'left') {
+                this.x -= Math.ceil(this.currentSpeed * deltaTime);
+            }
+
+            // Handle acceleration
             this.currentSpeed += this.acceleration * deltaTime;
             if (this.currentSpeed > this.velocity) {
                 this.currentSpeed = this.velocity; // Clamp to max speed
             }
         } else {
+            // Handle deceleration
             this.currentSpeed -= this.deceleration * deltaTime;
             if (this.currentSpeed < 0) {
                 this.currentSpeed = 0; // Stop at zero
             }
         }
 
-        // Move Right
-        if (Keyboard.state.get("KeyD") && this.getCollisionBounds().right < this.scene.width) {
-            if (this.currentDirection !== 'right' || this.directionChanged) {
-                this.textures = this.rightAnimationMoveFrames;
-                this.animationSpeed = 0.15; // Set animation speed only when changing direction
-                this.play();
-                this.directionChanged = false;
-            }
-            this.x += Math.ceil(this.currentSpeed * deltaTime);
-            this.currentDirection = 'right';
-
-            // Move Left
-        } else if (Keyboard.state.get("KeyA") && this.getCollisionBounds().left > 0) {
-            if (this.currentDirection !== 'left' || this.directionChanged) {
-                this.textures = this.leftAnimationMoveFrames;
-                this.animationSpeed = 0.15; // Set animation speed only when changing direction
-                this.play();
-                this.directionChanged = false;
-            }
-            this.x -= Math.ceil(this.currentSpeed * deltaTime);
-            this.currentDirection = 'left';
-        }
-
-        // if (Keyboard.state.get("KeyS") && this.getCollisionBounds().bottom < this.scene.height) {
-        //     this.y += Math.ceil(this.velocity * deltaTime);
-        // }
-
-        // if (Keyboard.state.get("KeyW") && this.getCollisionBounds().top > 0) {
-        //     this.y -= Math.ceil(this.velocity * deltaTime);
-        //     console.log(this.tree)
-        // }
-
         this.timeSinceLastAttack += deltaTime;
 
-        if (Keyboard.state.get("KeyJ") && this.timeSinceLastAttack / 60 >= this.attackCooldown && !this.attackLasts) {
-            this.attackLasts = true;
-            const animations = Assets.cache.get('hero-attack-melee-json').data.frames;
-            const frameNames = Object.keys(animations);
-            this.textures = this.currentDirection === 'right' ?
-                frameNames.filter(frameName => frameName.includes("right")).map(frameName => Texture.from(frameName))
-                :
-                frameNames.filter(frameName => frameName.includes("left")).map(frameName => Texture.from(frameName))
-            this.animationSpeed = 0.1;
-            this.loop = false
-            this.play()
-            this.onComplete = () => {
-                this.textures = this.currentDirection === 'right' ? this.rightAnimationIdleFrames : this.leftAnimationIdleFrames
-                this.animationSpeed = this.isMoving ? 0.01 : 0.02;
-                this.loop = true
-                this.play();
-                this.attackLasts = false;
-                if (this.tree.x - 20 < this.x && this.tree.x + this.tree.width - 40 > this.x) {
-                    this.tree.hit();
-                }
-            }
-            this.timeSinceLastAttack = 0;
-            // sound.play('woosh');
-
+        // console.log(isMovingNow, this.isMoving)
+        // console.log(this.isMoving, isMovingNow)
+        if (!isMovingNow && this.isMoving) {
+            this.animationSpeed = 0.02;
+            this.textures = this.currentDirection === 'right' ? this.rightAnimationIdleFrames : this.leftAnimationIdleFrames;
+            this.play();
+            this.isMoving = false; // Set isMoving to false
         }
 
         // if (Keyboard.state.get("KeyC") && this.isWeaponEquipped) {
@@ -254,6 +229,64 @@ export class Hero extends AnimatedSprite {
                 }
             }
         }
+
+        // Check if lumberjack nearby
+        const lumberjackDistance = Math.abs(this.scene.lumberjack.x - this.x);
+        if (lumberjackDistance < 50) {  // Możesz dostosować dystans
+            if (Keyboard.state.get("KeyK")) {
+                this.scene.lumberjack.takeWood(this.scene)
+            }
+        }
+
+        // Check if home nearby
+        const homeDistance = Math.abs((this.home.x + this.home.width / 2) - (this.x + this.width / 2));
+        if (homeDistance < 50 && !this.scene.deskReady && (this.scene.tree.health == 0 || this.scene.lumberjack.logsTaken >= this.scene.lumberjack.logsTarget)) {  // Możesz dostosować dystans
+            if (Keyboard.state.get("KeyK")) {
+                this.home.goToSleep()
+            }
+        }
+
+        // Check if desk nearby
+        // if (this.scene.deskReady) {
+            const deskDistance = Math.abs((this.scene.desk.x + this.scene.desk.width / 2) - (this.x + this.width / 2));
+            if (deskDistance < 80 && this.scene.deskReady) {
+                if (Keyboard.state.get("KeyK")) {
+                    this.scene.desk.endGame()
+                }
+            }
+        // }
+
+    }
+
+    private hit() {
+        if (!this.canAttack) {
+            return
+        }
+        if (!this.attackLasts && !this.scene.deskReady) {
+            this.attackLasts = true;
+            const animations = Assets.cache.get('hero-attack-melee-json').data.frames;
+            const frameNames = Object.keys(animations);
+            this.textures = this.currentDirection === 'right' ?
+                frameNames.filter(frameName => frameName.includes("right")).map(frameName => Texture.from(frameName))
+                :
+                frameNames.filter(frameName => frameName.includes("left")).map(frameName => Texture.from(frameName))
+            this.animationSpeed = 0.1;
+            this.loop = false
+            this.play()
+            this.onComplete = () => {
+                this.textures = this.currentDirection === 'right' ? this.rightAnimationIdleFrames : this.leftAnimationIdleFrames
+                this.animationSpeed = this.isMoving ? 0.01 : 0.02;
+                this.loop = true
+                this.play();
+                this.attackLasts = false;
+                if (this.tree.x - 20 < this.x && this.tree.x + this.tree.width - 40 > this.x) {
+                    this.tree.hit();
+                }
+            }
+            this.timeSinceLastAttack = 0;
+            // sound.play('woosh');
+
+        }
     }
 
     public getCollisionBounds(): CollisionBounds {
@@ -268,5 +301,64 @@ export class Hero extends AnimatedSprite {
     public override update(deltaTime: number): void {
         super.update(deltaTime); // Calls the parent class's update method
         this.updateAnimations(deltaTime); // Adds extra behavior
+    }
+ 
+    public displayThoughts() {
+        const message: string = messages['olafThoughts']['steveMention'][this.scene.language];
+    
+        // If the message container doesn't exist, create it
+        if (!this.messageContainer) {
+            this.messageContainer = new Container();
+            this.addChild(this.messageContainer); // Attach container to Lumberjack
+        }
+    
+        // Create background
+        const background = new Sprite(Texture.WHITE);
+        background.width = 120;
+        background.height = 40;
+        background.tint = 0x000000; // Black background
+        background.alpha = 0.7; // Semi-transparent
+        background.anchor.set(0.5);
+    
+        // Create text
+        this.messageText = new Text(message, {
+            fontFamily: "VT323",
+            fontSize: 20,
+            fill: "#ffffff", // White text
+            fontWeight: "bold",
+            // stroke: "#000000", // Black outline
+            // strokeThickness: 3,
+            wordWrap: true,
+            wordWrapWidth: 140,
+            align: "center",
+        });
+    
+        this.messageText.anchor.set(0.5);
+
+        background.width = this.messageText.width + 12;
+        background.height = this.messageText.height + 8;
+    
+        // Add background and text to the container
+        this.messageContainer.addChild(background);
+        this.messageContainer.addChild(this.messageText);
+    
+        // Position the container above the Lumberjack
+        this.messageContainer.position.set(0, -(this.messageContainer.height / 2) - 10);
+        console.log(this.y-this.messageContainer.y)
+        
+        // Adjust text position to match background
+        this.messageText.position.set(0, 0);
+
+        this.addChild(this.messageContainer)
+    
+        // Remove message after 3 seconds
+        clearTimeout(this.messageTimeout);
+        this.messageTimeout = setTimeout(() => {
+            this.messageContainer.removeChildren(); // Clear contents instead of destroying
+            if (!this.scene.lumberjack.hintClosed)
+                {
+                    this.scene.lumberjack.hintMessage = new HintMessage(this.scene.lumberjack, messages['worldInfo']['giveWood'][this.scene.language], 1, ()=>{ this.scene.lumberjack.canPickUpToday = true;})
+                }
+        }, 5000);
     }
 }
