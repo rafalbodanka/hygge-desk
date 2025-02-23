@@ -14,13 +14,6 @@ export class Desk extends Sprite {
         super(texture);
         this.scene = scene
 
-        console.log(texture)
-
-        if (!texture) {
-            console.error('Bed texture is not loaded!');
-            return;
-        }
-
         this.width = texture.width * 0.2;
         this.height = texture.height * 0.2;
     }
@@ -78,7 +71,6 @@ export class Desk extends Sprite {
             
             
             if (progress >= 1) {
-                console.log(progress)
                 this.scene.modal = new Modal(
                     this.scene,
                     messages['plot']['outro'][this.scene.language],

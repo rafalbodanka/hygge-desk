@@ -87,14 +87,9 @@ export class HintMessage {
     }
 
     closeModal() {
-        console.log("Closing HintMessage for:", this.parentDisplayable);
-        console.log("Desk children:", this.parentDisplayable.children.map(child => child.constructor.name));
-
         if (this.parentDisplayable) {
             this.parentDisplayable.removeChild(this.container); // Remove from scene
         }
         this.parentDisplayable.hintMessage = null;
-        console.log("Desk children:", this.parentDisplayable.children.map(child => child.constructor.name));
-
     }
 }

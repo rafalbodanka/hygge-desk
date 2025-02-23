@@ -79,7 +79,6 @@ export class Scene extends Container {
 
         this.home = new Home(this)
         this.home.x = 0
-        console.log(this.groundTiles[0])
         this.home.y = this.sceneHeight - this.home.height - this.groundTiles[0].height + 8
         this.addChild(this.home)
 
@@ -121,7 +120,7 @@ export class Scene extends Container {
         this.keyboardIcon.position.x = 40
         this.addChild(this.keyboardIcon)
 
-        this.keyboardIcon.interactive = true;
+        this.keyboardIcon.eventMode = "static";
         this.keyboardIcon.on('pointerdown', () => {
             this.modal.visible = true;
             this.addChild(this.modal.container)
@@ -140,7 +139,6 @@ export class Scene extends Container {
         const introModal = new Modal(this, null, hintsModal, false, ()=> {})
 
         this.modal = new Modal(this, "Język / Language", introModal, true, ()=> {
-            console.log(this.language)
             hintsModal.createText(messages['plot']['hints'][this.language])
             introModal.createText(messages['plot']['intro'][this.language])
         }, undefined, true)
@@ -255,11 +253,6 @@ export class Scene extends Container {
         let shiftAmount = 0;
 
         const cameraMoveMargin = 150;
-
-        // console.log("camera offset", this.cameraOffsetX)
-
-        // console.log("hero x", this.hero.x)
-        // console.log("world x",this.world.x)
 
         if (this.hero.x < this.cameraOffsetX + cameraMoveMargin && this.hero.isMoving && this.hero.currentDirection === "left") {
             shiftAmount = this.hero.currentSpeed * deltaTime;

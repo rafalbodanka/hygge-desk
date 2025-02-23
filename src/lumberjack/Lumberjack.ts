@@ -97,8 +97,7 @@ export class Lumberjack extends AnimatedSprite {
     
         // Position the container above the Lumberjack
         this.messageContainer.position.set(0, -(this.messageContainer.height / 2) - 10);
-        console.log(this.y-this.messageContainer.y)
-        
+                
         // Adjust text position to match background
         this.messageText.position.set(0, 0);
 

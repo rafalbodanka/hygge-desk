@@ -13,13 +13,6 @@ export class Home extends Sprite {
         super(texture);
         this.scene = scene
 
-        console.log(texture)
-
-        if (!texture) {
-            console.error('Bed texture is not loaded!');
-            return;
-        }
-
         this.width = texture.width * 0.2;
         this.height = texture.height * 0.2;
     }

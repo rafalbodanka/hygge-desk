@@ -94,7 +94,7 @@ export class Modal {
 
         
         // Make it interactive
-        buttonText.interactive = true;
+        buttonText.eventMode = "static";
     
         // Extend the clickable area (hit box)
         buttonText.hitArea = new PIXI.Rectangle(
@@ -137,8 +137,8 @@ export class Modal {
         buttonEN.position.set(buttonPL.x + buttonPL.width + gap, buttonPL.y);
     
         // Make them interactive
-        buttonPL.interactive = true;
-        buttonEN.interactive = true;
+        buttonPL.eventMode = "static";
+        buttonEN.eventMode = "static";
 
         [buttonPL, buttonEN].map(button => {
             button.on('pointerover', () => {
