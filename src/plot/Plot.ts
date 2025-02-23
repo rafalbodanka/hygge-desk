@@ -5,8 +5,8 @@ export const messages = {
             en: "Olaf has only a few days left until his dream retirement.\n\nHe wants to spend his golden years admiring the beautiful landscapes of his homeland and writing runic poetry.\n\nFor fruitful writing and relaxation, he needs a comfortable desk.\n\nHis friend Torlof, the best carpenter in all of Alesund, will surely prepare such a desk for him.\n\nIt’s time to cut down the last trees of his career and bring the wood to Torlof."
         },
         hints: {
-            pl: "Poruszanie:\n\nKlawisz A: w lewo\n\nKlawisz D: w prawo\n\nKlawisz J: zetnij drzewo\n\nKlawisz K: Interakcja z Torlofem/Sen w domu Olafa",
-            en: "Movement:\n\nKey A: left\n\nKey D: right\n\nKey J: cut the tree\n\nKey K: Interact with Torlof/Sleep in Olaf's house"
+            pl: "Poruszanie:\n\nKlawisz A: w lewo\n\nKlawisz D: w prawo\n\nKlawisz J: zetnij drzewo\n\nKlawisz K: interakcja z Torlofem/Sen w domu Olafa",
+            en: "Movement:\n\nKey A: left\n\nKey D: right\n\nKey J: cut the tree\n\nKey K: interact with Torlof/Sleep in Olaf's house"
         },
         outro: {
             pl: "Olaf nigdy nie był aż tak szczęśliwy. Jego hygge biurko jest w końcu gotowe. Widok jest zapierający dech, jak zawsze, ale tym razem juz hygge.",
