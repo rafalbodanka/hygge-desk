@@ -30,7 +30,7 @@ export const manifest:ResolverManifest = {
                 "tree-json" : "./tree/tree.json",
                 "shadow" : "./hero/shadow.png",
                 "axe" : "./hero/axe.png",
-                "woosh" : "./sound/woosh.mp3",
+                // "woosh" : "./sound/woosh.mp3",
             }
         },
     ]

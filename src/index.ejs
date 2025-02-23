@@ -6,10 +6,6 @@
 	<meta id="viewport" name="viewport"
 		content="width=device-width, minimum-scale=1.0, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no, viewport-fit=cover" />
 	<meta name="mobile-web-app-capable" content="no">
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
-	
 	<style>
 		html,
 		body {
@@ -28,11 +24,25 @@
 			width: 100vw;
 			background: #000000;
 		}
+
+		@font-face {
+			font-family: 'VT323';
+			src: url('/fonts/VT323-Regular.ttf') format('truetype'); /* ✅ Correct format */
+			font-weight: normal;
+			font-style: normal;
+		}
+
+		body, button, canvas {
+    font-family: 'VT323', monospace !important;
+}
+
 	</style>
 
 </head>
 
 <body>
+	<p style="opacity: 0; position: absolute; pointer-events: none;">font-preloader</p>
+
 	<noscript>Please enable JavaScript in your web browser to view this page.</noscript>
 	<div id="pixi-content"><canvas id="pixi-canvas" /></div>
 </body>
