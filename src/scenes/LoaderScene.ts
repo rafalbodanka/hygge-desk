@@ -48,8 +48,11 @@ export class LoaderScene extends Container {
 
     private async initializeLoader(): Promise<void>
     {
-        await Assets.init({ manifest: manifest });
-
+        await Promise.all([
+            this.loadFont("VT323"),
+            Assets.init({ manifest: manifest })
+        ]);
+        
         const bundleIds =  manifest.bundles.map(bundle => bundle.name);
 
         // The second parameter for `loadBundle` is a function that reports the download progress!
@@ -68,5 +71,31 @@ export class LoaderScene extends Container {
 
     get loadingCompleted(): Promise<void> {
         return this.completed;
+    }
+
+    private async loadFont(fontName: string): Promise<void> {
+        return new Promise<void>((resolve) => {
+            const testElement = document.createElement("span");
+            testElement.style.fontFamily = fontName;
+            testElement.style.position = "absolute";
+            testElement.style.opacity = "0";
+            testElement.innerText = "Loading...";
+            document.body.appendChild(testElement);
+    
+            if (document.fonts) {
+                document.fonts.ready.then(() => {
+                    console.log(`${fontName} loaded`);
+                    document.body.removeChild(testElement);
+                    resolve();
+                }).catch(() => {
+                    console.warn(`Failed to load ${fontName}`);
+                    document.body.removeChild(testElement);
+                    resolve();
+                });
+            } else {
+                console.warn("document.fonts API not supported");
+                resolve();
+            }
+        });
     }
 }
