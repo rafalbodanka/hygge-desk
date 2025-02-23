@@ -1,50 +1,105 @@
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-	<title>Hygge</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="no">
+    <title>Hygge</title>
 
-	<meta id="viewport" name="viewport"
-		content="width=device-width, minimum-scale=1.0, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no, viewport-fit=cover" />
-	<meta name="mobile-web-app-capable" content="no">
-	<style>
-		html,
-		body {
-			margin: 0;
-			padding: 0;
-			overflow: hidden;
-			
-		}
-		
-		#pixi-content {
-			display: flex;
-			padding-top: 120px;
-			justify-content: center;
-			align-items: top;
-			height: 100vh;
-			width: 100vw;
-			background: #000000;
-		}
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: #000;
+        }
 
-		@font-face {
-			font-family: 'VT323';
-			src: url('/fonts/VT323-Regular.ttf') format('truetype'); /* ✅ Correct format */
-			font-weight: normal;
-			font-style: normal;
-		}
+        #pixi-content {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            width: 100vw;
+        }
 
-		body, button, canvas {
-    font-family: 'VT323', monospace !important;
-}
+        @font-face {
+            font-family: 'VT323';
+            src: url('/fonts/VT323-Regular.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
 
-	</style>
+        body, button, canvas {
+            font-family: 'VT323', monospace !important;
+        }
 
+        #screen-warning {
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 20px;
+            font-size: 20px;
+            text-align: center;
+            border-radius: 10px;
+            font-family: 'VT323', monospace;
+        }
+    </style>
 </head>
-
 <body>
-	<p style="opacity: 0; position: absolute; pointer-events: none;">font-preloader</p>
 
-	<noscript>Please enable JavaScript in your web browser to view this page.</noscript>
-	<div id="pixi-content"><canvas id="pixi-canvas" /></div>
+    <p style="opacity: 0; position: absolute; pointer-events: none;">font-preloader</p>
+
+    <div id="screen-warning">
+		<p id="screen-warning-text">
+			Game requires a minimum screen size of 640x360 and a keyboard
+		</p>
+		<img src="favicon.ico" />
+	</div>
+    <div id="pixi-content">
+        <canvas id="pixi-canvas"></canvas>
+    </div>
+
+	<script>
+		async function checkDeviceCapabilities() {
+			const warning = document.getElementById("screen-warning");
+			const warningText = document.getElementById("screen-warning-text")
+			const pixiContent = document.getElementById("pixi-content");
+			
+			let hasKeyboard = false;
+			if (navigator.keyboard && navigator.keyboard.lock) {
+				try {
+					await navigator.keyboard.getLayoutMap();
+					hasKeyboard = true;
+				} catch (e) {
+					hasKeyboard = false;
+				}
+			}
+	
+			const isTouchScreen = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+			const screenTooSmall = window.innerWidth < 640 || window.innerHeight < 360;
+	
+			if (screenTooSmall || (!hasKeyboard && isTouchScreen)) {
+				warning.style.display = "block";
+				pixiContent.style.display = "none";
+	
+				if (!hasKeyboard && isTouchScreen) {
+					warningText.innerHTML = "<p>Game requires a minimum screen size of 640x360 and a keyboard</p>";
+				} else {
+					warningText.innerHTML = "<p>Game requires a minimum screen size of 640x360</p>";
+				}
+			} else {
+				warning.style.display = "none";
+				pixiContent.style.display = "flex";
+			}
+		}
+	
+		window.addEventListener("load", checkDeviceCapabilities);
+		window.addEventListener("resize", checkDeviceCapabilities);
+	</script>
+
 </body>
-
 </html>
