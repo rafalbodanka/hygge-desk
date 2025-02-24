@@ -50,7 +50,7 @@
             font-family: 'VT323', monospace;
         }
     </style>
-<script defer src="bundle.js?93793e49288561e7dbd1"></script></head>
+<script defer src="bundle.js?d5b06ecd5f330f330486"></script></head>
 <body>
 
     <p style="opacity: 0; position: absolute; pointer-events: none;">font-preloader</p>
@@ -71,27 +71,15 @@
 			const warningText = document.getElementById("screen-warning-text");
 			const pixiContent = document.getElementById("pixi-content");
 	
-			let hasKeyboard = false;
-			if (navigator.keyboard && navigator.keyboard.lock) {
-				try {
-					await navigator.keyboard.getLayoutMap();
-					hasKeyboard = true;
-				} catch (e) {
-					hasKeyboard = false;
-				}
-			}
-	
 			const isTouchScreen = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 			const screenTooSmall = window.innerWidth < 640 || window.innerHeight < 360;
 			
-			// Only allow play if there is a keyboard, and block if only touchscreen is available
-			const invalidDevice = !hasKeyboard || isTouchScreen; 
-	
-			if (screenTooSmall || invalidDevice) {
+			// Only allow play if there is a keyboard, and block if only touchscreen is available	
+			if (screenTooSmall || isTouchScreen) {
 				warning.style.display = "block";
 				pixiContent.style.display = "none";
 	
-				if (invalidDevice) {
+				if (isTouchScreen) {
 					warningText.innerHTML = "<p>Game requires a keyboard (touchscreen is not supported)</p>";
 				} else {
 					warningText.innerHTML = "<p>Game requires a minimum screen size of 640x360</p>";
