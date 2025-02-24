@@ -23,7 +23,7 @@ export const messages = {
             en: "Go to sleep and wait for the desk."
         },
         cutTheTree: {
-            pl: "Zetnij drzewo drzewo.\n\n[Klawisz J]",
+            pl: "Zetnij drzewo.\n\n[Klawisz J]",
             en: "Cut down the tree.\n\n[Key J]"
         },
         giveWood: {
