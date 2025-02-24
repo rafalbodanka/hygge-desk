@@ -1,66 +1,66 @@
 export const messages = {
     plot: {
         intro: {
-            pl: "Drwalowi Olafowi zostało juz tylko kilka dni do wymarzonej emerytury.\n\nChciałby swój złoty wiek spędzić na podziwianiu pięknych krajobrazów swojej ojczyzny i na pisaniu poezji runicznej.\n\nDo owocnego pisania i odpoczynku potrzebuje wygodnego biurka.\n\nJego przyjaciel Torlof, najlepszy stolaz w calym Alesund na pewno przygotuje mu takie biurko.\n\nCzas ściąć ostatnie drzewa w karierze i przynieść Torlofowi drewno do pracy.",
-            en: "Olaf has only a few days left until his dream retirement.\n\nHe wants to spend his golden years admiring the beautiful landscapes of his homeland and writing runic poetry.\n\nFor fruitful writing and relaxation, he needs a comfortable desk.\n\nHis friend Torlof, the best carpenter in all of Alesund, will surely prepare such a desk for him.\n\nIt’s time to cut down the last trees of his career and bring the wood to Torlof."
+            pl: "Olaf, stary drwal, ma przed sobą już tylko kilka dni do zasłużonej emerytury.\n\nMarzy, by spędzić ten czas w spokoju, podziwiając krajobrazy swojej ojczyzny i pisząc poezję runiczną.\n\nBy jednak cieszyć się tym w pełni, potrzebuje solidnego biurka.\n\nJego przyjaciel Torlof, najlepszy stolarz w całym Alesund, obiecał je dla niego wykonać.\n\nCzas na ostatnią wycinkę – trzeba zebrać drewno i dostarczyć je Torlofowi.",
+            en: "Olaf, an old lumberjack, has only a few days left until his well-earned retirement.\n\nHe dreams of spending his days in peace, admiring the landscapes of his homeland and writing runic poetry.\n\nBut to truly enjoy this, he needs a solid desk.\n\nHis friend Torlof, the best carpenter in all of Alesund, has promised to craft one for him.\n\nNow, it's time for one last harvest—gather the wood and bring it to Torlof."
         },
         hints: {
-            pl: "Poruszanie:\n\nKlawisz A: w lewo\n\nKlawisz D: w prawo\n\nKlawisz J: zetnij drzewo\n\nKlawisz K: interakcja z Torlofem/Sen w domu Olafa",
-            en: "Movement:\n\nKey A: left\n\nKey D: right\n\nKey J: cut the tree\n\nKey K: interact with Torlof/Sleep in Olaf's house"
+            pl: "Sterowanie:\n\nA – ruch w lewo\n\nD – ruch w prawo\n\nJ – ścięcie drzewa\n\nK – interakcja (Torlof, sen w domu Olafa)",
+            en: "Controls:\n\nA – move left\n\nD – move right\n\nJ – chop tree\n\nK – interact (Torlof, sleep in Olaf’s house)"
         },
         outro: {
-            pl: "Olaf nigdy nie był aż tak szczęśliwy. Jego hygge biurko jest w końcu gotowe. Widok jest zapierający dech, jak zawsze, ale tym razem juz hygge.",
-            en: "Olaf was never that happy. His hygge desk is finally ready. The view is breathtaking as always, but now somehow better."
+            pl: "Olaf nie pamięta, kiedy ostatnio czuł się tak szczęśliwy. Jego biurko jest gotowe, a widok na Alesund – jak zawsze zapierający dech, ale tym razem w pełni Hygge.",
+            en: "Olaf can’t remember the last time he felt this happy. His desk is ready, and the view outside—breathtaking as always, but now feels truly Hygge."
         },
     },
     worldInfo: {
         homeSleep: {
-            pl: "Sen przywraca drzewo. Idź do domu Olafa.\n\n[Klawisz K]",
-            en: "Sleeping revives the tree. Go to Olaf's house.\n\n[Key K]"
+            pl: "Drzewa odradzają się w ciągu nocy. Wróć do domu Olafa i odpocznij.\n\n[Klawisz K]",
+            en: "Trees restores overnight. Return to Olaf's house and rest.\n\n[Key K]"
         },
         homeDeskReady: {
-            pl: "Biurko będzie gotowe jutro. Pora spać",
-            en: "Go to sleep and wait for the desk."
+            pl: "Czas odpocząć i zaczekać na biurko.",
+            en: "The desk will be ready tomorrow. Time to rest."
         },
         cutTheTree: {
-            pl: "Zetnij drzewo.\n\n[Klawisz J]",
-            en: "Cut down the tree.\n\n[Key J]"
+            pl: "Zetnij drzewo\n\n[Klawisz J]",
+            en: "Chop down the tree\n\n[Key J]"
         },
         giveWood: {
-            pl: "Zanieś drewno Torlofowi.\n\n[Klawisz K]",
-            en: "Give wood to Torlof.\n\n[Key K]"
+            pl: "Zanieś drewno Torlofowi\n\n[Klawisz K]",
+            en: "Deliver the wood to Torlof\n\n[Key K]"
         },
         deskSitDown: {
-            pl: "Usiądź :)\n\n[Klawisz K]",
-            en: "Sit down :)\n\n[Key K]"
+            pl: "Usiądź przy biurku\n\n[Klawisz K]",
+            en: "Sit at the desk\n\n[Key K]"
         },
     },
     torlofDialogue: {
         thanks_all_for_day: {
-            pl: 'Przynieś mi jeszcze %s sztuk drewna do stworzenia biurka.',
-            en: 'Bring me %s more pieces of wood to build the desk.'
+            pl: "Potrzebuję jeszcze %s kawałków drewna, by skończyć biurko.",
+            en: "I need %s more pieces of wood to finish the desk."
         },
         thanks: {
-            pl: 'Dzięki za drewno! Potrzebuję jeszcze %s sztuk.',
-            en: 'Thanks for the wood! I still need %s more pieces.'
+            pl: "Dzięki! Brakuje mi jeszcze %s sztuk drewna.",
+            en: "Thanks! I still need %s more pieces of wood."
         },
         thanks_go_to_sleep: {
-            pl: 'Dzięki za drewno! Potrzebuję jeszcze %s sztuk. Wróć jutro.',
-            en: 'Thanks for the wood! I still need %s more pieces. Come back tomorrow.'
+            pl: "Dzięki! Brakuje mi jeszcze %s sztuk drewna. Wróć jutro.",
+            en: "Thanks! I still need %s more pieces of wood. Come back tomorrow."
         },
         thanks_desk_ready: {
-            pl: 'Mam juz wystarczająco duzo drewna. Biurko będzie gotowe na jutro.',
-            en: 'I have enough wood now. The desk will be ready by tomorrow.'
+            pl: "Mam już wystarczająco duzo drewna. Biurko będzie gotowe jutro.",
+            en: "I have everything I need. The desk will be ready tomorrow."
         },
         how_is_the_desk: {
-            pl: "I jak biurko? Podoba się? Miłej emerytury!",
-            en: "How's the desk? Do you like it? Enjoy your retirement!"
+            pl: "I jak biurko? Podoba się? Życzę ci spokojnej emerytury.",
+            en: "So, how's the desk? Do you like it? Wishing you a peaceful retirement."
         },
     },
     olafThoughts: {
         steveMention: {
-            pl: 'Dobrze ze Steve nauczył mnie ścinać drzewa gołą ręką. Co za oszczędność siekier.',
-            en: 'Good thing Steve taught me how to cut down trees with my bare hands. What an axe savings.'
+            pl: "Dobrze, że Steve nauczył mnie ścinać drzewa gołymi rękami. Ile to zaoszczędzonych siekier...",
+            en: "Good thing Steve taught me how to chop trees with my bare hands. Saved me quite a few axes..."
         }
     }
 };
