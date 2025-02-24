@@ -9,7 +9,7 @@ export const messages = {
             en: "Controls:\n\nA – move left\n\nD – move right\n\nJ – chop tree\n\nK – interact (Torlof, sleep in Olaf’s house)"
         },
         outro: {
-            pl: "Olaf nie pamięta, kiedy ostatnio czuł się tak szczęśliwy. Jego biurko jest gotowe, a widok na Ålesund – jak zawsze zapierający dech, ale tym razem w pełni Hygge.",
+            pl: "Olaf nie pamięta, kiedy ostatnio czuł się tak szczęśliwy. Jego biurko jest gotowe, a widok na Ålesund – jak zawsze piękny, ale tym razem w pełni Hygge.",
             en: "Olaf can’t remember the last time he felt this happy. His desk is ready, and the view outside—breathtaking as always, but now feels truly Hygge."
         },
     },
