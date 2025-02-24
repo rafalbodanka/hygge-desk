@@ -1,15 +1,15 @@
 export const messages = {
     plot: {
         intro: {
-            pl: "Olaf, stary drwal, ma przed sobą już tylko kilka dni do zasłużonej emerytury.\n\nMarzy, by spędzić ten czas w spokoju, podziwiając krajobrazy swojej ojczyzny i pisząc poezję runiczną.\n\nBy jednak cieszyć się tym w pełni, potrzebuje solidnego biurka.\n\nJego przyjaciel Torlof, najlepszy stolarz w całym Alesund, obiecał je dla niego wykonać.\n\nCzas na ostatnią wycinkę – trzeba zebrać drewno i dostarczyć je Torlofowi.",
-            en: "Olaf, an old lumberjack, has only a few days left until his well-earned retirement.\n\nHe dreams of spending his days in peace, admiring the landscapes of his homeland and writing runic poetry.\n\nBut to truly enjoy this, he needs a solid desk.\n\nHis friend Torlof, the best carpenter in all of Alesund, has promised to craft one for him.\n\nNow, it's time for one last harvest—gather the wood and bring it to Torlof."
+            pl: "Olaf, stary drwal, ma przed sobą już tylko kilka dni do zasłużonej emerytury.\n\nMarzy, by spędzić ten czas w spokoju, podziwiając krajobrazy swojej ojczyzny i pisząc poezję runiczną.\n\nBy jednak cieszyć się tym w pełni, potrzebuje solidnego biurka.\n\nJego przyjaciel Torlof, najlepszy stolarz w całym Ålesund, obiecał je dla niego wykonać.\n\nCzas na ostatnią wycinkę – trzeba zebrać drewno i dostarczyć je Torlofowi.",
+            en: "Olaf, an old lumberjack, has only a few days left until his well-earned retirement.\n\nHe dreams of spending his days in peace, admiring the landscapes of his homeland and writing runic poetry.\n\nBut to truly enjoy this, he needs a solid desk.\n\nHis friend Torlof, the best carpenter in all of Ålesund, has promised to craft one for him.\n\nNow, it's time for one last harvest—gather the wood and bring it to Torlof."
         },
         hints: {
             pl: "Sterowanie:\n\nA – ruch w lewo\n\nD – ruch w prawo\n\nJ – ścięcie drzewa\n\nK – interakcja (Torlof, sen w domu Olafa)",
             en: "Controls:\n\nA – move left\n\nD – move right\n\nJ – chop tree\n\nK – interact (Torlof, sleep in Olaf’s house)"
         },
         outro: {
-            pl: "Olaf nie pamięta, kiedy ostatnio czuł się tak szczęśliwy. Jego biurko jest gotowe, a widok na Alesund – jak zawsze zapierający dech, ale tym razem w pełni Hygge.",
+            pl: "Olaf nie pamięta, kiedy ostatnio czuł się tak szczęśliwy. Jego biurko jest gotowe, a widok na Ålesund – jak zawsze zapierający dech, ale tym razem w pełni Hygge.",
             en: "Olaf can’t remember the last time he felt this happy. His desk is ready, and the view outside—breathtaking as always, but now feels truly Hygge."
         },
     },
@@ -49,7 +49,7 @@ export const messages = {
             en: "Thanks! I still need %s more pieces of wood. Come back tomorrow."
         },
         thanks_desk_ready: {
-            pl: "Mam już wystarczająco duzo drewna. Biurko będzie gotowe jutro.",
+            pl: "Mam już wystarczająco dużo drewna. Biurko będzie gotowe jutro.",
             en: "I have everything I need. The desk will be ready tomorrow."
         },
         how_is_the_desk: {
