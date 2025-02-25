@@ -154,6 +154,14 @@ export class Hero extends AnimatedSprite {
                 this.x -= Math.ceil(this.currentSpeed * deltaTime);
             }
 
+            if (this.x < 0) {
+                this.x = 0;
+                this.stopMoving()
+            } else if (this.x > this.scene.x + this.scene.worldWidth - this.width) {
+                this.x = 640 - this.width;
+                this.stopMoving()
+            }
+
             // Handle acceleration
             this.currentSpeed += this.acceleration * deltaTime;
             if (this.currentSpeed > this.velocity) {

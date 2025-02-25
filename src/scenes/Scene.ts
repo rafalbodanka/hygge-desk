@@ -18,7 +18,7 @@ export class Scene extends Container {
     private sceneHeight: number;
     private sceneWidth: number;
     public worldWidth: number;
-    private cameraOffsetX: number = 0;
+    // private cameraOffsetX: number = 0;
     private world: Sprite;
     public hero: Hero;
     public lumberjack: Lumberjack;
@@ -49,7 +49,7 @@ export class Scene extends Container {
 
         this.sceneWidth = 640;
         this.sceneHeight = 360;
-        this.worldWidth = 2400;
+        this.worldWidth = 640;
         this.sortableChildren = true;
         window.addEventListener("keydown", this.onKeyPress.bind(this));
 
@@ -63,7 +63,6 @@ export class Scene extends Container {
         // Create a Graphics object for the mask
         this.maskGraphics = new Graphics();
         this.addChild(this.maskGraphics);
-        
         const groundTileTexture = Texture.from("ground_tile");
         
         // Create and position the ground tiles at the bottom of the scene
@@ -236,7 +235,7 @@ export class Scene extends Container {
             log.update(deltaTime); // This calls the update method of each log
         });
 
-        this.updateCamera(deltaTime);
+        // this.updateCamera(deltaTime);
 
         (this.logCountText as PIXI.Text).text = `${this.lumberjack.logsTaken + this.logCount}/${this.lumberjack.logsTarget}`;
 
@@ -246,34 +245,34 @@ export class Scene extends Container {
     }
 
 
-    private updateCamera(deltaTime: number) {
-        // const leftBound = 0;
-        // const rightBound = this.world.width;
-        let shouldMove = false;
-        let shiftAmount = 0;
+    // private updateCamera(deltaTime: number) {
+    //     // const leftBound = 0;
+    //     // const rightBound = this.world.width;
+    //     let shouldMove = false;
+    //     let shiftAmount = 0;
 
-        const cameraMoveMargin = 150;
+    //     const cameraMoveMargin = 150;
 
-        if (this.hero.x < this.cameraOffsetX + cameraMoveMargin && this.hero.isMoving && this.hero.currentDirection === "left") {
-            shiftAmount = this.hero.currentSpeed * deltaTime;
-            this.cameraOffsetX += shiftAmount
-            shouldMove = true
-        } else if (this.hero.x > this.cameraOffsetX + this.world.width - this.hero.width - cameraMoveMargin && this.hero.isMoving && this.hero.currentDirection === "right") {
-            shiftAmount = -this.hero.currentSpeed * deltaTime;
-            this.cameraOffsetX += shiftAmount;
-            shouldMove = true
+    //     if (this.hero.x < this.cameraOffsetX + cameraMoveMargin && this.hero.isMoving && this.hero.currentDirection === "left") {
+    //         shiftAmount = this.hero.currentSpeed * deltaTime;
+    //         this.cameraOffsetX += shiftAmount
+    //         shouldMove = true
+    //     } else if (this.hero.x > this.cameraOffsetX + this.world.width - this.hero.width - cameraMoveMargin && this.hero.isMoving && this.hero.currentDirection === "right") {
+    //         shiftAmount = -this.hero.currentSpeed * deltaTime;
+    //         this.cameraOffsetX += shiftAmount;
+    //         shouldMove = true
 
-        }
+    //     }
 
-        if (!shouldMove) {
-            return
-        }
+    //     if (!shouldMove) {
+    //         return
+    //     }
 
-        // this.tree.x += shiftAmount;
-        // this.weapon.x += shiftAmount;
-        // this.logs.forEach(log => log.x += shiftAmount);
-        // this.groundTiles.forEach(tile => tile.x += shiftAmount);
-    }
+    //     // this.tree.x += shiftAmount;
+    //     // this.weapon.x += shiftAmount;
+    //     // this.logs.forEach(log => log.x += shiftAmount);
+    //     // this.groundTiles.forEach(tile => tile.x += shiftAmount);
+    // }
 
     public startNewDay() {
         const fadeOverlay = new Graphics();
