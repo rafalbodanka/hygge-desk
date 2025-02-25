@@ -1,4 +1,4 @@
-import { Sprite, Assets, Rectangle } from 'pixi.js';
+import { Sprite, Assets, Rectangle, Text } from 'pixi.js';
 import { CollisionBounds } from '../types/CollisionBounds';
 import { Scene } from '../scenes/Scene'; // Import the Scene class
 import { HintMessage } from '../hint/hintMessage';
@@ -13,7 +13,6 @@ export class Desk extends Sprite {
         const texture = Assets.cache.get('desk'); // Assuming log texture is available in assets
         super(texture);
         this.scene = scene
-
         this.width = texture.width * 0.2;
         this.height = texture.height * 0.2;
     }
@@ -69,14 +68,13 @@ export class Desk extends Sprite {
                 requestAnimationFrame(updateZoom); // Continue animation
             }
             
-            
             if (progress >= 1) {
                 this.scene.modal = new Modal(
                     this.scene,
                     messages['plot']['outro'][this.scene.language],
                     null,
                     true,
-                    () => {},
+                    () => {this.displayNewGameButton()},
                     2,
                 );
                 const inverseScaleX = 1 / this.scene.scale.x;
@@ -94,4 +92,60 @@ export class Desk extends Sprite {
         requestAnimationFrame(updateZoom);
 
     }
+
+    displayNewGameButton() {
+        const buttonText = "Play again!";
+        
+        const button = new Text(buttonText, {
+            fontFamily: "VT323",
+            fontSize: 26,
+            fill: "#ffffff",
+            fontWeight: "bold",
+            align: "center",
+        });
+        
+        button.anchor.set(0.5);
+        button.eventMode = "static";
+    
+        button.on("pointerdown", () => {
+            location.reload();
+        });
+        
+        button.hitArea = new Rectangle(
+            -10,
+            -10,
+            button.width + 20,
+            button.height + 20
+        );
+
+        button.on('pointerover', () => {
+            button.scale.set(inverseScaleX * 1.05, inverseScaleY * 1.05)
+        })
+        button.on('pointerout', () => {
+            button.scale.set(inverseScaleX, inverseScaleY)
+        })
+    
+        const inverseScaleX = 1 / this.scene.scale.x;
+        const inverseScaleY = 1 / this.scene.scale.y;
+        button.scale.set(inverseScaleX, inverseScaleY);
+        
+        button.position.set(265, this.scene.pivot.y + 15);
+    
+        let originalY = button.y;
+        let levitationTime = 0;
+    
+        const animateFloating = () => {
+            levitationTime += 1;
+    
+            const levitationOffset = Math.sin(levitationTime * 0.05);
+            button.y = originalY + levitationOffset;
+    
+            requestAnimationFrame(animateFloating);
+        };
+    
+        requestAnimationFrame(animateFloating);
+    
+        this.scene.addChild(button);
+    }
+    
 }

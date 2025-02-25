@@ -5,7 +5,7 @@ export const messages = {
             en: "Olaf, an old lumberjack, has only a few days left until his well-earned retirement.\n\nHe dreams of spending his days in peace, admiring the landscapes of his homeland and writing runic poetry.\n\nBut to truly enjoy this, he needs a solid desk.\n\nHis friend Torlof, the best carpenter in all of Ålesund, has promised to craft one for him.\n\nNow, it's time for one last harvest—gather the wood and bring it to Torlof."
         },
         hints: {
-            pl: "Sterowanie:\n\nA – ruch w lewo\n\nD – ruch w prawo\n\nJ – ścięcie drzewa\n\nK – interakcja (Torlof, sen w domu Olafa)",
+            pl: "Sterowanie:\n\nA – ruch w lewo\n\nD – ruch w prawo\n\nJ – ścinanie drzewa\n\nK – interakcja (Torlof, sen w domu Olafa)",
             en: "Controls:\n\nA – move left\n\nD – move right\n\nJ – chop tree\n\nK – interact (Torlof, sleep in Olaf’s house)"
         },
         outro: {
@@ -15,8 +15,8 @@ export const messages = {
     },
     worldInfo: {
         homeSleep: {
-            pl: "Drzewa odradzają się w ciągu nocy. Wróć do domu Olafa i odpocznij.\n\n[Klawisz K]",
-            en: "Trees restores overnight. Return to Olaf's house and rest.\n\n[Key K]"
+            pl: "Drzewo odradza się w ciągu nocy. Wróć do domu Olafa i odpocznij.\n\n[Klawisz K]",
+            en: "The tree restores overnight. Return to Olaf's house and rest.\n\n[Key K]"
         },
         homeDeskReady: {
             pl: "Czas odpocząć i zaczekać na biurko.",
