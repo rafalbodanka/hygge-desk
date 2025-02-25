@@ -94,7 +94,7 @@ export class Desk extends Sprite {
     }
 
     displayNewGameButton() {
-        const buttonText = "Play again!";
+        const buttonText = messages['worldInfo']['playAgainButton'][this.scene.language];
         
         const button = new Text(buttonText, {
             fontFamily: "VT323",

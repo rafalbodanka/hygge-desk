@@ -34,6 +34,10 @@ export const messages = {
             pl: "Usiądź przy biurku\n\n[Klawisz K]",
             en: "Sit at the desk\n\n[Key K]"
         },
+        playAgainButton: {
+            pl: "Zagraj ponownie!",
+            en: "Play again!"
+        }
     },
     torlofDialogue: {
         thanks_all_for_day: {
